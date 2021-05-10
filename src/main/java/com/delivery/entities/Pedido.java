@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "pedido")
@@ -26,6 +28,7 @@ public class Pedido {
 	private Long id;
 	
 	@ManyToOne
+	@JsonIgnore
 	private Cliente cliente;
 	
 	@ManyToMany

@@ -28,6 +28,9 @@ public class ClienteRepositoryTest {
 	public void buscaClientesCadastradosPorNome() {
 		Cliente clienteNaoEncontrado = clientRepository.findByNome("Jamille");
 		assertThat(clienteNaoEncontrado).isNull();
+		
+		Cliente clienteEncontrado = clientRepository.findByNome("Diego");
+		assertThat(clienteEncontrado).isNotNull();
 	}
 
 }
