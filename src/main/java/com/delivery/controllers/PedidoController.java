@@ -20,6 +20,7 @@ import com.delivery.entities.Item;
 import com.delivery.entities.Pedido;
 import com.delivery.services.repositories.ClienteRepository;
 import com.delivery.services.repositories.ItemRepository;
+import com.delivery.utils.ValidaCepUtil;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -37,23 +38,31 @@ public class PedidoController {
 		RespostaDTO	dto	=	new	RespostaDTO();
 		try	{
 			Cliente	c =	clienteRepository.getOne(clienteId);
-			String[] listaDeItensID	= listaDeItens.split(",");
-			Pedido	pedido	=  new Pedido();
-			BigDecimal	valorTotal	=	BigDecimal.ZERO;
-			List<Item>	itensPedidos	=	new	ArrayList<Item>();
-			for	(String	itemId	:	listaDeItensID)	{
-				Item	item	=	itemRepository.getOne(Long.parseLong(itemId));
-				itensPedidos.add(item);
-				valorTotal = valorTotal.add(item.getPreco());
+			Boolean enderecoValido = ValidaCepUtil.validaCep("60140100");
+			if(enderecoValido) {
+				String[] listaDeItensID	= listaDeItens.split(",");
+				Pedido	pedido	=  new Pedido();
+				BigDecimal	valorTotal	=	BigDecimal.ZERO;
+				List<Item>	itensPedidos	=	new	ArrayList<Item>();
+				for	(String	itemId	:	listaDeItensID)	{
+					Item	item	=	itemRepository.getOne(Long.parseLong(itemId));
+					itensPedidos.add(item);
+					valorTotal = valorTotal.add(item.getPreco());
+				}
+				pedido.setItens(itensPedidos);
+				pedido.setValorTotal(valorTotal);
+				pedido.setData(LocalDateTime.now());
+				pedido.setCliente(c);
+				c.getPedidos().add(pedido);
+				
+				clienteRepository.saveAndFlush(c);
+				Long ultimoPedido = c.getPedidos().stream().mapToLong(Pedido::getId).reduce(0,Long::max);
+				dto	=	new	RespostaDTO(ultimoPedido,valorTotal,"Pedido efetuado com sucesso");
+			} else {
+				dto.setMensagem("Erro: Cep Inválido");
+				return	ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);
 			}
-			pedido.setItens(itensPedidos);
-			pedido.setValorTotal(valorTotal);
-			pedido.setData(LocalDateTime.now());
-			pedido.setCliente(c);
-			c.getPedidos().add(pedido);
-			clienteRepository.saveAndFlush(c);
-			Long ultimoPedido = c.getPedidos().stream().mapToLong(Pedido::getId).reduce(0,Long::max);
-			dto	=	new	RespostaDTO(ultimoPedido,valorTotal,"Pedido efetuado com sucesso");
+			
 		}	catch	(Exception	e)	{
 			dto.setMensagem("Erro:	"	+	e.getMessage());
 			return	ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dto);

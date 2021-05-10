@@ -7,5 +7,7 @@ import com.delivery.entities.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+	
+	public Cliente findByNome(String nome);
 
 }

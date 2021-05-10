@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.delivery</groupId>
 	<artifactId>delivery</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<name>delivery</name>
 	<description>Projeto de teste</description>
 	<properties>
@@ -19,7 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<main.basedir>${basedir}/../..</main.basedir>
 		<dockerfile-maven-version>1.4.13</dockerfile-maven-version>
-		<docker-app-version>2.4</docker-app-version>
+		<docker-app-version>2.4.1</docker-app-version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -31,10 +31,10 @@
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
 		<dependency>
-				<groupId>org.springframework.data</groupId>
-				<artifactId>spring-data-rest-hal-browser</artifactId>
-				<version>3.3.6.RELEASE</version>
-		</dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-browser</artifactId>
+			<version>3.3.6.RELEASE</version>
+	</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -60,6 +60,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
