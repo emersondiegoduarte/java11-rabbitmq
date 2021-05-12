@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.delivery.entities.Cliente;
-import com.delivery.services.repositories.ClienteRepository;
+import com.delivery.repositories.ClienteRepository;
 
 @SpringBootTest
 public class ClienteRepositoryTest {

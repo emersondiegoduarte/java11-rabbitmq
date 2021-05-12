@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.delivery.entities.Item;
-import com.delivery.services.repositories.ItemRepository;
+import com.delivery.repositories.ItemRepository;
 
 @RestController
 @RequestMapping("/item")

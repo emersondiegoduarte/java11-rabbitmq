@@ -18,8 +18,10 @@ import com.delivery.dto.RespostaDTO;
 import com.delivery.entities.Cliente;
 import com.delivery.entities.Item;
 import com.delivery.entities.Pedido;
-import com.delivery.services.repositories.ClienteRepository;
-import com.delivery.services.repositories.ItemRepository;
+import com.delivery.repositories.ClienteRepository;
+import com.delivery.repositories.ItemRepository;
+import com.delivery.services.AtualizacaoEstoqueService;
+import com.delivery.utils.EnviaNotificacao;
 import com.delivery.utils.ValidaCepUtil;
 
 @RestController
@@ -32,6 +34,12 @@ public class PedidoController {
 	
 	@Autowired
 	private ItemRepository itemRepository;
+	
+	@Autowired
+	private AtualizacaoEstoqueService atualizacaoEstoqueService;
+	
+	@Autowired
+	private EnviaNotificacao enviaNotificacao;
 	
 	@GetMapping("/novo/{clienteId}/{listaDeItens}")
 	public ResponseEntity<RespostaDTO> createPedido(@PathVariable("clienteId") Long clienteId, @PathVariable("listaDeItens") String listaDeItens){
@@ -54,8 +62,11 @@ public class PedidoController {
 				pedido.setData(LocalDateTime.now());
 				pedido.setCliente(c);
 				c.getPedidos().add(pedido);
-				
 				clienteRepository.saveAndFlush(c);
+				enviaNotificacao.enviaEmail(c, pedido);
+				//Enviar via Fila
+				//atualizacaoEstoqueService.send(pedido);
+				atualizacaoEstoqueService.sendReativo(pedido);
 				Long ultimoPedido = c.getPedidos().stream().mapToLong(Pedido::getId).reduce(0,Long::max);
 				dto	=	new	RespostaDTO(ultimoPedido,valorTotal,"Pedido efetuado com sucesso");
 			} else {
